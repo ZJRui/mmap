@@ -38,7 +38,7 @@ public class AsyncVolatileStateMachineRegion implements AsyncRegion {
     private final FileSizeEnsurer fileSizeEnsurer;
     private final FileChannel.MapMode mapMode;
     private final int length;
-    private final long timoutNanos;
+    private final long timeoutNanos;
 
     private final UnmappedRegionState unmapped;
     private final MapRequestedRegionState mapRequested;
@@ -60,7 +60,7 @@ public class AsyncVolatileStateMachineRegion implements AsyncRegion {
         this.fileSizeEnsurer = Objects.requireNonNull(fileSizeEnsurer);
         this.mapMode = Objects.requireNonNull(mapMode);
         this.length = length;
-        this.timoutNanos = timeUnits.toNanos(timeout);
+        this.timeoutNanos = timeUnits.toNanos(timeout);
 
         this.unmapped = new UnmappedRegionState();
         this.mapRequested = new MapRequestedRegionState();
@@ -82,7 +82,7 @@ public class AsyncVolatileStateMachineRegion implements AsyncRegion {
 
     private boolean awaitMapped(final long position) {
         if (this.position != position) {
-            final long timeOutTimeNanos = System.nanoTime() + timoutNanos;
+            final long timeOutTimeNanos = System.nanoTime() + timeoutNanos;
             while (!map(position)) {
                 if (timeOutTimeNanos <= System.nanoTime()) return false;
             }

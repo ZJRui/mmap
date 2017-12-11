@@ -2,13 +2,11 @@ package org.tools4j.mmap.mapper;
 
 import org.agrona.DirectBuffer;
 import org.agrona.IoUtil;
-import org.tools4j.mmap.io.MappedFile;
 
 import java.nio.channels.FileChannel;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.LongConsumer;
 import java.util.function.Supplier;
 
 public class AsyncAtomicExchangeRegion implements AsyncRegion {
@@ -18,7 +16,7 @@ public class AsyncAtomicExchangeRegion implements AsyncRegion {
     private final FileSizeEnsurer fileSizeEnsurer;
     private final FileChannel.MapMode mapMode;
     private final int length;
-    private final long timoutNanos;
+    private final long timeoutNanos;
 
 
     private final AtomicLong requestPosition = new AtomicLong(NULL);
@@ -40,7 +38,7 @@ public class AsyncAtomicExchangeRegion implements AsyncRegion {
         this.fileSizeEnsurer = Objects.requireNonNull(fileSizeEnsurer);
         this.mapMode = Objects.requireNonNull(mapMode);
         this.length = length;
-        this.timoutNanos = timeUnits.toNanos(timeout);
+        this.timeoutNanos = timeUnits.toNanos(timeout);
     }
 
     @Override
@@ -74,7 +72,7 @@ public class AsyncAtomicExchangeRegion implements AsyncRegion {
 
     private boolean awaitMapped(final long position) {
         if (!map(position)) {
-            final long timeOutTimeNanos = System.nanoTime() + timoutNanos;
+            final long timeOutTimeNanos = System.nanoTime() + timeoutNanos;
             long respAddress;
             do {
                 if (timeOutTimeNanos <= System.nanoTime()) return false; // timeout
