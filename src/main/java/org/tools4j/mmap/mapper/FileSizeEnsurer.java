@@ -18,12 +18,11 @@ public interface FileSizeEnsurer {
             if (fileSize.get() < minSize) {
                 final long len = fileSizeGetter.getAsLong();
                 if (len < minSize) {
-                    final long newLen = minSize;
-                    if (newLen > maxSize) {
-                        throw new IllegalStateException("Exceeded max file size " + maxSize + ", requested size " + newLen);
+                    if (minSize > maxSize) {
+                        throw new IllegalStateException("Exceeded max file size " + maxSize + ", requested size " + minSize);
                     }
-                    fileSizeSetter.accept(newLen);
-                    fileSize.set(newLen);
+                    fileSizeSetter.accept(minSize);
+                    fileSize.set(minSize);
                 } else {
                     fileSize.set(len);
                 }
