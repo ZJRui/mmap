@@ -23,8 +23,8 @@
  */
 package org.tools4j.mmap.mapper;
 
-public interface RegionState {
-    RegionState requestMap(final long filePosition);
-    RegionState requestUnmap();
-    RegionState processRequest();
+public interface AsyncRegionState {
+    AsyncRegionState requestMap(final long filePosition);
+    AsyncRegionState requestUnmap();
+    AsyncRegionState processRequest();
 }

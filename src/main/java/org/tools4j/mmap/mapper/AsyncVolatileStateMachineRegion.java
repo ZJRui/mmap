@@ -45,7 +45,7 @@ public class AsyncVolatileStateMachineRegion implements AsyncRegion {
     private final MappedRegionState mapped;
     private final UnMapRequestedRegionState unmapRequested;
 
-    private volatile RegionState currentState;
+    private volatile AsyncRegionState currentState;
 
     private long position = NULL;
     private long address = NULL;
@@ -102,8 +102,8 @@ public class AsyncVolatileStateMachineRegion implements AsyncRegion {
 
     @Override
     public boolean process() {
-        final RegionState readState = this.currentState;
-        final RegionState nextState = readState.processRequest();
+        final AsyncRegionState readState = this.currentState;
+        final AsyncRegionState nextState = readState.processRequest();
         if (readState != nextState) {
             this.currentState = nextState;
             return true;
@@ -113,53 +113,53 @@ public class AsyncVolatileStateMachineRegion implements AsyncRegion {
 
     @Override
     public boolean map(final long position) {
-        final RegionState readState = this.currentState;
-        final RegionState nextState = readState.requestMap(position);
+        final AsyncRegionState readState = this.currentState;
+        final AsyncRegionState nextState = readState.requestMap(position);
         if (readState != nextState) this.currentState = nextState;
         return nextState == mapped;
     }
 
     @Override
     public boolean unmap() {
-        final RegionState readState = this.currentState;
-        final RegionState nextState = readState.requestUnmap();
+        final AsyncRegionState readState = this.currentState;
+        final AsyncRegionState nextState = readState.requestUnmap();
         if (readState != nextState) this.currentState = nextState;
         return nextState == unmapped;
     }
 
-    private final class UnmappedRegionState implements RegionState {
+    private final class UnmappedRegionState implements AsyncRegionState {
         @Override
-        public RegionState requestMap(final long position) {
+        public AsyncRegionState requestMap(final long position) {
             mapRequested.requestedPosition = position;
             return mapRequested;
         }
 
         @Override
-        public RegionState requestUnmap() {
+        public AsyncRegionState requestUnmap() {
             return this;
         }
 
         @Override
-        public RegionState processRequest() {
+        public AsyncRegionState processRequest() {
             return this;
         }
     }
 
-    private final class MapRequestedRegionState implements RegionState {
+    private final class MapRequestedRegionState implements AsyncRegionState {
         private long requestedPosition;
 
         @Override
-        public RegionState requestMap(final long position) {
+        public AsyncRegionState requestMap(final long position) {
             return this;
         }
 
         @Override
-        public RegionState requestUnmap() {
+        public AsyncRegionState requestUnmap() {
             return this;
         }
 
         @Override
-        public RegionState processRequest() {
+        public AsyncRegionState processRequest() {
             if (address != NULL) {
                 IoUtil.unmap(fileChannelSupplier.get(), address, length);
                 address = NULL;
@@ -174,9 +174,9 @@ public class AsyncVolatileStateMachineRegion implements AsyncRegion {
         }
     }
 
-    private final class MappedRegionState implements RegionState {
+    private final class MappedRegionState implements AsyncRegionState {
         @Override
-        public RegionState requestMap(final long position) {
+        public AsyncRegionState requestMap(final long position) {
             if (AsyncVolatileStateMachineRegion.this.position != position) {
                 mapRequested.requestedPosition = position;
                 AsyncVolatileStateMachineRegion.this.position = NULL;
@@ -186,30 +186,30 @@ public class AsyncVolatileStateMachineRegion implements AsyncRegion {
         }
 
         @Override
-        public RegionState requestUnmap() {
+        public AsyncRegionState requestUnmap() {
             position = NULL;
             return unmapRequested;
         }
 
         @Override
-        public RegionState processRequest() {
+        public AsyncRegionState processRequest() {
             return this;
         }
     }
 
-    private final class UnMapRequestedRegionState implements RegionState {
+    private final class UnMapRequestedRegionState implements AsyncRegionState {
         @Override
-        public RegionState requestMap(final long position) {
+        public AsyncRegionState requestMap(final long position) {
             return this;
         }
 
         @Override
-        public RegionState requestUnmap() {
+        public AsyncRegionState requestUnmap() {
             return this;
         }
 
         @Override
-        public RegionState processRequest() {
+        public AsyncRegionState processRequest() {
             IoUtil.unmap(fileChannelSupplier.get(), address, length);
             address = NULL;
             return unmapped;
