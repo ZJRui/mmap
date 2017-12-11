@@ -36,11 +36,13 @@ buildscript {
 
 dependencies {
     compile 'org.hdrhistogram:HdrHistogram:2.1.9'
+    // https://mvnrepository.com/artifact/org.agrona/agrona
+    compile group: 'org.agrona', name: 'agrona', version: '0.9.10'
+    compile 'org.slf4j:slf4j-simple:1.7.14'
     testCompile 'junit:junit:4.11'
     testCompile 'org.assertj:assertj-core:3.4.1'
     testCompile 'org.mockito:mockito-all:1.10.19'
     testCompile 'ByteWatcher:bytewatcher:1.1'
-    testCompile 'org.slf4j:slf4j-simple:1.7.14'
 }
 
 uploadArchives {

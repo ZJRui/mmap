@@ -44,7 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.LongSupplier;
 
-@RunWith(Parameterized.class)
+//@RunWith(Parameterized.class)
 public class MappedQueueRawDataLatencyTest {
 
     private final long messagesPerSecond;
@@ -55,7 +55,7 @@ public class MappedQueueRawDataLatencyTest {
     private Enumerator enumerator;
     private ByteWatcher byteWatcher;
 
-    @Parameterized.Parameters(name = "{index}: MPS={0}, NBYTES={1}")
+    //@Parameterized.Parameters(name = "{index}: MPS={0}, NBYTES={1}")
     public static Collection<?> testRunParameters() {
         return Arrays.asList(new Object[][] {
                 { 160000, 100},
@@ -75,7 +75,7 @@ public class MappedQueueRawDataLatencyTest {
         this.numberOfBytes = numberOfBytes;
     }
 
-    @Before
+    //@Before
     public void setup() throws Exception {
         queue = SingleQueue.createOrReplace(FileUtil.sharedMemDir("queue").getAbsolutePath());
 //        queue = IndexedQueue.createOrReplace(FileUtil.sharedMemDir("queue").getAbsolutePath());
@@ -86,7 +86,7 @@ public class MappedQueueRawDataLatencyTest {
         byteWatcher = null;//ByteWatcherPrinter.watch();
     }
 
-    @After
+    //@After
     public void tearDown() throws Exception {
         if (appender != null) {
             appender.close();
@@ -106,7 +106,7 @@ public class MappedQueueRawDataLatencyTest {
         }
     }
 
-    @Test
+    //@Test
     public void latencyTest() throws Exception {
         //given
         final long histogramMax = TimeUnit.SECONDS.toNanos(1);

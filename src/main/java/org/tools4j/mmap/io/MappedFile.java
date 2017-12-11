@@ -31,18 +31,23 @@ import java.util.concurrent.atomic.AtomicLong;
 public final class MappedFile implements Closeable {
 
     public enum Mode {
-        READ_ONLY("r"),
-        READ_WRITE("rw"),
+        READ_ONLY("r", FileChannel.MapMode.READ_ONLY),
+        READ_WRITE("rw", FileChannel.MapMode.READ_WRITE),
         /** Delete io contents on open*/
-        READ_WRITE_CLEAR("rw");
+        READ_WRITE_CLEAR("rw", FileChannel.MapMode.READ_WRITE);
 
         private final String rasMode;
-        Mode(final String rasMode) {
+        private final FileChannel.MapMode mapMode;
+        Mode(final String rasMode, final FileChannel.MapMode mapMode) {
             this.rasMode = Objects.requireNonNull(rasMode);
+            this.mapMode = Objects.requireNonNull(mapMode);
         }
 
         public String getRandomAccessMode() {
             return rasMode;
+        }
+        public FileChannel.MapMode getMapMode() {
+            return mapMode;
         }
     }
 

@@ -73,7 +73,7 @@ public final class MappedRegion implements Closeable {
 //        } finally {
 //            final long dt = System.nanoTime() - t0;
 //            if (dt > 100000) {
-//                System.out.println("map: dt=" + dt / 1000f + " micros");
+//                System.out.println("wrap: dt=" + dt / 1000f + " micros");
 //            }
 //        }
         return this;
