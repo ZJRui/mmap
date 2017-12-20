@@ -29,4 +29,16 @@ public interface RegionRingFactory {
             return regions;
         };
     }
+
+    static <T extends Region> RegionRingFactory forSync(final RegionFactory<T> regionFactory) {
+        return (ringSize, regionSize, fileChannelSupplier, fileSizeEnsurer, mapMode) -> {
+            final Region[] regions = new Region[ringSize];
+
+            for (int i = 0; i < ringSize; i++) {
+                regions[i] = regionFactory.create(regionSize, fileChannelSupplier, fileSizeEnsurer, mapMode);
+            }
+            return regions;
+        };
+    }
+
 }

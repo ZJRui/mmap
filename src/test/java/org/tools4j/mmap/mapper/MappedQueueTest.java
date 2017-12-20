@@ -20,7 +20,7 @@ public class MappedQueueTest {
         LOGGER.info("File: {}", fileName);
         final long regionSize = Math.max(RegionMapper.REGION_SIZE_GRANULARITY, 1L << 16) * 64;//64 KB
         LOGGER.info("regionSize: {}", regionSize);
-        final MappedQueue mappedQueue = new MappedQueue(fileName, regionSize);
+        final AsyncMappedQueue mappedQueue = new AsyncMappedQueue(fileName, regionSize);
         final Appender appender = mappedQueue.appender();
 
         final String testMessage = "#------------------------------------------------#\n";
