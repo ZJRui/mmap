@@ -27,6 +27,7 @@ import org.agrona.DirectBuffer;
 import org.tools4j.mmap.region.api.AsyncRegion;
 import org.tools4j.mmap.region.api.AsyncRegionState;
 import org.tools4j.mmap.region.api.FileSizeEnsurer;
+import sun.misc.Contended;
 
 import java.nio.channels.FileChannel;
 import java.util.Objects;
@@ -49,6 +50,7 @@ public class AsyncVolatileStateMachineRegion implements AsyncRegion {
     private final MappedRegionState mapped;
     private final UnMapRequestedRegionState unmapRequested;
 
+    @Contended
     private volatile AsyncRegionState currentState;
 
     private long position = NULL;

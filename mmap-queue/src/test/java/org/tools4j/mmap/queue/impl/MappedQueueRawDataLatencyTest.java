@@ -142,7 +142,6 @@ public class MappedQueueRawDataLatencyTest {
 
         final RegionRingFactory regionRingFactory = SYNC.get();
         queue = new MappedQueue(fileName, regionSize, regionRingFactory, 4, 1,64L * 16 * 1024 * 1024 * 4);
-        regionRingFactory.onComplete();
 
         appender = queue.appender();
         poller = pollerFactory.apply(queue);
